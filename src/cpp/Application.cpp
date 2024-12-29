@@ -19,7 +19,23 @@ void Application::Setup()
     glfwWindowHint(GLFW_BLUE_BITS, 24);
     glfwWindowHint(GLFW_ALPHA_BITS, 8);
 
-    window = glfwCreateWindow(800, 800, "CoconutGraphics", NULL, NULL);
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    if (!monitor) {
+        std::cerr << "Failed to get the primary monitor!" << std::endl;
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+        return;
+    }
+
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    if (!mode) {
+        std::cerr << "Failed to get video mode!" << std::endl;
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+        return;
+    }
+
+    window = glfwCreateWindow(mode->width,mode->height, "CoconutGraphics", NULL, NULL);
     if (!window)
     {
         std::cerr << "WINDOW CREATION FAILED" << std::endl;
@@ -30,7 +46,7 @@ void Application::Setup()
 
     glfwMakeContextCurrent(window);
 
-    camera = Camera(800, 800, 1.5);
+    camera = Camera(mode->width, mode->height, 1.5);
     
     glfwSwapInterval(0);
 
@@ -47,7 +63,7 @@ void Application::Run()
     unsigned int fps = 0;
 
     bool C_WAS_PRESSED = false;
-    bool R_WAS_PRESSED = true;
+    bool R_WAS_PRESSED = false;
 
     double LastCursorX = 0.0; double LastCursorY = 0.0;
     double CursorX = 0.0; double CursorY = 0.0;
