@@ -51,7 +51,7 @@ void Application::Setup()
     glfwSwapInterval(0);
 
     renderer.Initialize(window, &scene, &camera);
-    //std::cout << scene.planes[0].normal.x;
+
 
     
 }
@@ -67,8 +67,6 @@ void Application::Run()
 
     double LastCursorX = 0.0; double LastCursorY = 0.0;
     double CursorX = 0.0; double CursorY = 0.0;
-
-    //glfwGetCursorPos(window, &LastCursorX, &LastCursorY);
 
     while (!glfwWindowShouldClose(window))
     {

@@ -491,33 +491,20 @@ void main()
 		ray.pos = u_CameraPosition;
 		ray.dir = normalize(pixel_pos );
 
-		//seed = uint(abs(pixel_pos.x * 9.1238412.0f + pixel_pos.y * 13.0f + u_FrameCount * 121117.0f + 12342 * i));
-		//seed = pcg_hash()
-
-	
-
-
-		out_color += clamp(get_color(ray),0,1);
+		out_color += get_color(ray);
 	}
 
 	out_color /= float(num_samples);
+
 	
 	if (!u_RenderMode)
 	{
 	
 	FragColor = 1.0f * (gamma(vec4(out_color, 1)) + float(u_FrameCount) * texture(prevRender, uv)) / float(u_FrameCount + 1u);
-	//FragColor += texture(prevRender, uv + vec2(u_AliasingBlur, u_AliasingBlur)) 
-		//+ texture(prevRender, uv + vec2(u_AliasingBlur, -u_AliasingBlur))
-		//+ texture(prevRender, uv + vec2(-u_AliasingBlur, -u_AliasingBlur))
-		//+ texture(prevRender, uv + vec2(-u_AliasingBlur, u_AliasingBlur));
-	//FragColor /= 14.0f;
+
 	}
 	else 
 	{
 		FragColor = gamma(vec4(out_color,1));
 	}
-
-	//FragColor = vec4(squares[0].material.color,1);
-	
-
 }
