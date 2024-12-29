@@ -95,14 +95,12 @@ out vec4 FragColor;
 
 //uniform sampler2D PrevRender;
 
-uint seed = 0u;
+uint state = 0u;
 uint pcg_hash()
 {
-    uint state = seed * 747796405u + 2891336453u;
+    state = state * 747796405u + 2891336453u;
     uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
-	seed =  (word >> 22u) ^ word;
-	seed *= u_FrameCount;
-    return seed;
+	return  (word >> 22u) ^ word;
 }
 
 float rand()
@@ -121,8 +119,7 @@ float NormalRandDist()
 vec3 randomOnHemisphere(vec3 normal)
 {
 	vec3 dir = normalize(vec3(NormalRandDist(), NormalRandDist(), NormalRandDist()));
-	if (dot(dir, normal) < 0) {dir = -dir;}
-	return dir;
+	return normalize(dir + normal);
 }
 
 struct HitData
@@ -335,12 +332,15 @@ vec3 get_color(Ray ray)
 				if (hit.mat.IOR < 1)
 				{
 					ray.pos = hit.point + hit.normal * normal_offset;
-					vec3 diffuse = normalize(hit.normal + randomOnHemisphere(hit.normal));
+					vec3 diffuse = randomOnHemisphere(hit.normal);
+					//vec3 diffuse = vec3(rand(),rand(), rand());
+					//return diffuse;
 
 				
 					bool isSpecular = (rand() < hit.mat.specular_probability);
 					float s = (1-hit.mat.roughness) * float(isSpecular); //woah...
-	
+					
+					//s = 0.0f;
 
 					ray.dir = diffuse * (1-s) * (1-hit.mat.metallic) + specular * s;
 					ray.dir = normalize(ray.dir);
@@ -446,10 +446,6 @@ void main()
 {
 	int caseOfAntialiasing = int(mod(u_FrameCount, 4));
 	
-	
-
-	
-
 	vec2 uv = (vec2(fPos.x, fPos.y) + vec2(1,1)) / 2;
 
 	Ray ray;
@@ -460,8 +456,7 @@ void main()
 	float y = fPos.y;
 
 
-	seed = uint(101239 * fract(sin(abs(x * 0.12394128f + y * 923.2321878f + float(u_FrameCount+1u) * 10.964f))));
-
+	state = uint(gl_FragCoord.x * 1000.0f + gl_FragCoord.y * 1000000.0f + u_FrameCount*81932u);
 
 	uint amod = uint(mod(u_FrameCount, 2));
 
@@ -501,12 +496,11 @@ void main()
 	
 	if (!u_RenderMode)
 	{
-	
 	FragColor = 1.0f * (gamma(vec4(out_color, 1)) + float(u_FrameCount) * texture(prevRender, uv)) / float(u_FrameCount + 1u);
-
 	}
 	else 
 	{
 		FragColor = gamma(vec4(out_color,1));
 	}
+
 }

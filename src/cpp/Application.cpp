@@ -128,6 +128,7 @@ void Application::Run()
 
             R_WAS_PRESSED = false;
             camera.RenderMode = !camera.RenderMode;
+            if (camera.RenderMode == false) { camera.isConnectedToCursor = false; }
             renderer.reset();
 
         }
