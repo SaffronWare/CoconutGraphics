@@ -72,7 +72,7 @@ void OpenGLContext::Initialize()
 
     glViewport(0, 0, 800, 800);
 
-    shader.Compile("vertex_shader.glsl", "fragment_shader.glsl");
+    shader.Compile("shaders/vertex_shader.glsl", "shaders/fragment_shader.glsl");
     shader.Use();
     LOCS.Initialize(shader.GetProgram());
     glUniform1i(LOCS.prevRender, 0);
@@ -142,7 +142,7 @@ void OpenGLContext::Initialize()
     glBindBufferBase(GL_UNIFORM_BUFFER, LOCS.squareBuffer, SquareUBO);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    std::string path_to_skybox = ((std::string)ASSET_DIR) + "/skybox.hdr";
+    std::string path_to_skybox = "assets/skybox.hdr";
     LoadHDR(&Skybox_Texture, path_to_skybox.c_str());
 }
 

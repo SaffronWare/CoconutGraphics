@@ -5,8 +5,7 @@
 std::string get_file_contents(const char* filename)
 {
 	
-    std::string actual_path = ((std::string)SHDR_DIR  + (const char*)("/") + std::string(filename));
-	std::cout << actual_path << std::endl;
+	std::string actual_path = filename;
 	std::ifstream in(actual_path, std::ios::binary);
 	if (in)
 	{

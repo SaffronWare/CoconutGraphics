@@ -5,6 +5,7 @@ project ("CoconutGraphics")
 
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(LIB_DIR ${CMAKE_SOURCE_DIR}/libs)
+set(ASSET_DIR ${CMAKE_SOURCE_DIR}/assets)
 set(SHDR_DIR ${SRC_DIR}/shaders)
 set(ASSET_DIR ${CMAKE_SOURCE_DIR}/assets)
 
@@ -44,6 +45,9 @@ target_link_libraries(CoconutGraphics PRIVATE GLFW)
 
 
 file(COPY "${LIB_DIR}/glfw-3.4/lib-vc-2022/glfw3.dll" DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${SHDR_DIR} DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${ASSET_DIR} DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY "${SRC_DIR}/imgui.ini" DESTINATION ${CMAKE_BINARY_DIR})
 
 if (SHDR_DIR)
 	target_compile_definitions(CoconutGraphics PRIVATE SHDR_DIR=\"${SHDR_DIR}\")

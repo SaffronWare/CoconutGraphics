@@ -13,7 +13,7 @@ void ImGuiRenderer::Initialize(GLFWwindow* window, Scene* scene, Camera* camera)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	ImGui::LoadIniSettingsFromDisk(((std::string)SRC_DIR + (const char*)"/imgui.ini").c_str());
+	ImGui::LoadIniSettingsFromDisk("imgui.ini");
 
 	ImGui::StyleColorsDark();
 	

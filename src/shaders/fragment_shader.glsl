@@ -59,7 +59,7 @@ const int num_squares =5;
 
 
 const int num_bounces = 10;
-const float normal_offset = 0.001f;
+const float normal_offset = 0.00001f;
 const int num_samples = 4;
 
 
