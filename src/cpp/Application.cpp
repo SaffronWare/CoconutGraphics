@@ -129,6 +129,7 @@ void Application::Run()
             R_WAS_PRESSED = false;
             if (camera.RenderMode) { C_WAS_PRESSED = true; }
             camera.RenderMode = !camera.RenderMode;
+            glfwGetCursorPos(window, &LastCursorX, &LastCursorY);
             //if (camera.RenderMode == false) { camera.isConnectedToCursor = false; }
             renderer.reset();
 

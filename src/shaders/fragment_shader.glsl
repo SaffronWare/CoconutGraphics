@@ -52,7 +52,7 @@ struct Square
 
 const float PI = 3.14159265358979323846264338327950288419716939937510f;
 
-const float max_dist = 30000;
+const float max_dist = 300;
 const int num_spheres = 10;
 const int num_planes = 10;
 const int num_squares =5;
@@ -211,7 +211,7 @@ vec2 SphereUV(vec3 dir)
 {
 	vec2 uv;
 	uv.x = 0.5f + 0.5f * atan(dir.z,dir.x) / PI;
-	uv.y = 0.5 + asin(dir.y) / PI;
+	uv.y = 0.5 - asin(dir.y) / PI;
 	return uv;
 };
 
