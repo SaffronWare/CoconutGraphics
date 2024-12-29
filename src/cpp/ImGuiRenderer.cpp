@@ -31,9 +31,13 @@ void ImGuiRenderer::RenderLocMatMenu(Material& mat)
 	float s_absorbance_color[3] = { mat.absorbance.x, mat.absorbance.y, mat.absorbance.z };
 	float s_specular_color[3] = { mat.specular_reflectance.x, mat.specular_reflectance.y, mat.specular_reflectance.z };
 
+	
+
 	ImGui::SliderFloat("roughness", &mat.roughness, 0.0f, 1.0f);
 	ImGui::SliderFloat("specular probability", &mat.specular_probability, 0.0f, 1.0f);
 	ImGui::SliderFloat("mettalic", &mat.mettalic, 0.0f, 1.0f);
+	ImGui::SliderFloat("emission strength", &mat.emission_strength, 0.0f, 10.0f);
+	
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(200);
@@ -46,14 +50,15 @@ void ImGuiRenderer::RenderLocMatMenu(Material& mat)
 	ImGui::PopItemWidth();
 	ImGui::NewLine();
 
-	ImGui::SliderFloat("emission strength", &mat.emission_strength, 0.0f, 10.0f);
+
 	ImGui::PushItemWidth(200);
 	ImGui::ColorPicker3("emission color", s_emission_color, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_DisplayRGB);
 	ImGui::PopItemWidth();
 	ImGui::NewLine();
 
 	ImGui::Text("put the IOR to below 1 to make object non-transparent");
-	ImGui::SliderFloat("index of refraction", &mat.IOR, 0, 5);
+	ImGui::SliderFloat("index of refraction", &mat.IOR, 0, 3);
+	ImGui::SliderFloat("absorbance strength", &mat.absorbance_strength, 0.0f, 5.0f);
 
 	ImGui::PushItemWidth(200);
 	ImGui::ColorPicker3("absorbance color", s_absorbance_color, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_DisplayRGB);
@@ -75,6 +80,7 @@ void ImGuiRenderer::RenderLocMatMenu(Material& mat)
 	mat.specular_reflectance.x = s_specular_color[0];
 	mat.specular_reflectance.y = s_specular_color[1];
 	mat.specular_reflectance.z = s_specular_color[2];
+
 
 }
 

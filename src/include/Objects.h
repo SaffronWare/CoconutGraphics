@@ -15,10 +15,11 @@ struct Material
     Vec3 specular_reflectance = Vec3(1.0, 1.0, 1.0);
 	float specular_probability = 0.0f;
 	
-    Vec3 absorbance = Vec3(0.0, 0.0, 0.0);
+    Vec3 absorbance = Vec3(1.0, 1.0, 1.0);
     float IOR = 0.0; 
 
-	Vec3 padding;
+	float padding[2];
+	float absorbance_strength = 1.0f;
 	float mettalic = 0.0f;
 	
 };

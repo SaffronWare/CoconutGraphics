@@ -44,11 +44,22 @@ target_link_libraries(CoconutGraphics PUBLIC GLAD)
 target_link_libraries(CoconutGraphics PRIVATE GLFW)
 
 
-file(COPY "${LIB_DIR}/glfw-3.4/lib-vc-2022/glfw3.dll" DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${SHDR_DIR} DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${ASSET_DIR} DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY "${SRC_DIR}/imgui.ini" DESTINATION ${CMAKE_BINARY_DIR})
+#file(COPY "${LIB_DIR}/glfw-3.4/lib-vc-2022/glfw3.dll" DESTINATION ${CMAKE_BINARY_DIR})
+#file(COPY ${SHDR_DIR} DESTINATION ${CMAKE_BINARY_DIR})
+#file(COPY ${ASSET_DIR} DESTINATION ${CMAKE_BINARY_DIR})
+#file(COPY "${SRC_DIR}/imgui.ini" DESTINATION ${CMAKE_BINARY_DIR})
 
+add_custom_command(
+    TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+         "${LIB_DIR}/glfw-3.4/lib-vc-2022/glfw3.dll" ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SHDR_DIR} "${CMAKE_BINARY_DIR}/shaders"
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${SRC_DIR}/imgui.ini" ${CMAKE_BINARY_DIR}
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${ASSET_DIR} "${CMAKE_BINARY_DIR}/assets"
+)
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

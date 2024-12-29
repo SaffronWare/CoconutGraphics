@@ -16,7 +16,8 @@ struct Material
 	vec3 absorbance;
     float IOR; 
 
-	vec3 padding;
+	vec2 padding;
+	float absorbance_strength;
 	float metallic;
 	
 
@@ -59,7 +60,7 @@ const int num_squares =5;
 
 
 const int num_bounces = 10;
-const float normal_offset = 0.00001f;
+const float normal_offset = 0.001f;
 const int num_samples = 4;
 
 
@@ -422,9 +423,9 @@ vec3 get_color(Ray ray)
 
 					if (should_beer)
 					{
-							ray_color.x *= exp(-hit.dist * (1.0f - hit.mat.absorbance.x));
-							ray_color.y *= exp(-hit.dist * (1.0f - hit.mat.absorbance.y));
-							ray_color.z *= exp(-hit.dist * (1.0f - hit.mat.absorbance.z));
+							ray_color.x *= exp(-hit.dist * hit.mat.absorbance_strength * (1.0f - hit.mat.absorbance.x));
+							ray_color.y *= exp(-hit.dist * hit.mat.absorbance_strength * (1.0f - hit.mat.absorbance.y));
+							ray_color.z *= exp(-hit.dist * hit.mat.absorbance_strength * (1.0f - hit.mat.absorbance.z));
 					}
 				}
 			}
