@@ -29,7 +29,7 @@ void ImGuiRenderer::RenderLocMatMenu(Material& mat)
 	float s_color[3] = { mat.color.x, mat.color.y, mat.color.z };
 	float s_emission_color[3] = { mat.emission_color.x, mat.emission_color.y, mat.emission_color.z };
 	float s_absorbance_color[3] = { mat.absorbance.x, mat.absorbance.y, mat.absorbance.z };
-	float s_specular_color[3] = { mat.specular_reflectance.x, mat.specular_reflectance.y, mat.specular_reflectance.y };
+	float s_specular_color[3] = { mat.specular_reflectance.x, mat.specular_reflectance.y, mat.specular_reflectance.z };
 
 	ImGui::SliderFloat("roughness", &mat.roughness, 0.0f, 1.0f);
 	ImGui::SliderFloat("specular probability", &mat.specular_probability, 0.0f, 1.0f);

@@ -64,7 +64,7 @@ const float normal_offset = 0.01f;
 const int num_samples = 4;
 
 
-const vec3 cLightDir = vec3(1,1,1);
+const vec3 cLightDir = normalize(vec3(1,1,1));
 
 uniform float u_AspectRatio;
 uniform vec3 u_CameraPosition;
@@ -428,6 +428,8 @@ vec3 get_color(Ray ray)
 	else 
 	{
 		HitData hit = closestHit(ray);
+
+ 
 		out_color = hit.mat.color * max(0.2f, 0.5f * (1 + dot(hit.normal, cLightDir)));;
 	}
 

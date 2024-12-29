@@ -220,7 +220,7 @@ void OpenGLContext::OnSphereBufferChange(const Scene& scene)
 {
     glBindBuffer(GL_UNIFORM_BUFFER, SphereUBO);
     glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_SPHERES * sizeof(Sphere), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_UNIFORM_BUFFER,  0, scene.spheres.size() * sizeof(Sphere), scene.spheres.data());
+    glBufferData(GL_UNIFORM_BUFFER,  scene.spheres.size() * sizeof(Sphere), scene.spheres.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
