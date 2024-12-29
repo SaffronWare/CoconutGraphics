@@ -9,6 +9,10 @@
 #include "Shader.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "HDRloader.h"
+
+#ifdef ASSET_DIR
+#endif
 
 
 struct UNIFORMLOCS
@@ -26,7 +30,8 @@ struct UNIFORMLOCS
 	GLuint sphereBuffer;
 	GLuint planeBuffer;
 	GLuint squareBuffer;
-
+	GLuint skybox;
+	GLuint prevRender;
 
 	void Initialize(GLuint program);
 };
@@ -52,6 +57,8 @@ private:
 	GLuint Viewport_FBO;
 	GLuint Viewport_Texture;
 	GLuint Viewport_RBO;
+
+	GLuint Skybox_Texture;
 
 
 	GLuint SphereUBO;

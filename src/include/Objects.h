@@ -64,15 +64,3 @@ public:
 	Material material;
 };
 
-struct BiconvexSphere
-{
-	BiconvexSphere()
-	{
-		material.IOR = 1.2f;
-	}
-	Vec3 position;
-	float radius;
-	Vec3 width;
-	float pad1;
-	Material material;
-};

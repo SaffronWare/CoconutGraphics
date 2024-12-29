@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "OpenGLContext.h"
 #include "ImGuiRenderer.h"
 #include "Scene.h"

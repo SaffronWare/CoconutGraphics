@@ -19,9 +19,6 @@ void Renderer::NewFrame(GLFWwindow* window, const Scene& scene, unsigned int fps
 {
     
     GLcontext.UseProgram();
-    //GLcontext.PassObjects(scene);
-    
-
 
     imgui_renderer.BeforeRender();
 

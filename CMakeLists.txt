@@ -6,18 +6,16 @@ project ("CoconutGraphics")
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(LIB_DIR ${CMAKE_SOURCE_DIR}/libs)
 set(SHDR_DIR ${SRC_DIR}/shaders)
+set(ASSET_DIR ${CMAKE_SOURCE_DIR}/assets)
 
 file(GLOB SOURCES 
 	"${SRC_DIR}/cpp/*.cpp" 
 	"${SRC_DIR}/include/*.h" 
 	"${LIB_DIR}/ImGui/*.cpp"
 	"${LIB_DIR}/ImGui/*.h"
-    "${LIB_DIR}/ImGui/backends/imgui_impl_glfw.cpp"
-	"${LIB_DIR}/ImGui/backends/imgui_impl_opengl3.cpp"
-	"${LIB_DIR}/ImGui/backends/imgui_impl_glfw.h"
-	"${LIB_DIR}/ImGui/backends/imgui_impl_opengl3.h"
-	
-
+	"${LIB_DIR}/ImGui/backends/*.h"
+	"${LIB_DIR}/ImGui/backends/*.cpp"
+	"${LIB_DIR}/STB_IMAGE/stb_image.h"
 )
 
 message(STATUS "Found source files: ${SOURCES}")
@@ -31,11 +29,14 @@ add_library(GLAD "${LIB_DIR}/OpenGL/src/glad.c")
 target_include_directories(GLAD PUBLIC "${LIB_DIR}/OpenGL/include")
 
 
+
+
 add_executable (CoconutGraphics ${SOURCES})
 target_include_directories(CoconutGraphics PRIVATE
 	"${SRC_DIR}/include"
-    ${LIB_DIR}/ImGui             # Include ImGui headers
-    ${LIB_DIR}/ImGui/backends    # Include backend headers
+    "${LIB_DIR}/ImGui"         
+    "${LIB_DIR}/ImGui/backends"
+	"${LIB_DIR}/STB_IMAGE"
 )
 
 target_link_libraries(CoconutGraphics PUBLIC GLAD)
@@ -50,6 +51,10 @@ endif()
 
 if (SRC_DIR)
 	target_compile_definitions(CoconutGraphics PRIVATE SRC_DIR=\"${SRC_DIR}\")
+endif()
+
+if (ASSET_DIR)
+	target_compile_definitions(CoconutGraphics PRIVATE ASSET_DIR=\"${ASSET_DIR}\")
 endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

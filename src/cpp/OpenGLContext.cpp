@@ -20,6 +20,10 @@ void UNIFORMLOCS::Initialize(GLuint program)
     GLint p_PlaneBuffer = glGetUniformBlockIndex(program, "PlaneData");
     GLint p_SquareBuffer = glGetUniformBlockIndex(program, "SquareData");
 
+    GLint p_prevRender = glGetUniformLocation(program, "prevRender");
+    GLint p_skybox = glGetUniformLocation(program, "skybox");
+
+
 
     
     if (p_CameraPosition == -1) { std::cerr << "CameraPosition uniform not found!\n"; }
@@ -33,6 +37,10 @@ void UNIFORMLOCS::Initialize(GLuint program)
     if (p_PlaneBuffer == -1) { std::cerr << "PlaneBuffer uniform not found\n"; }
     if (p_FrameCount == -1) { std::cerr << "FrameCount uniform not found\n"; }
     if (p_SquareBuffer == -1) { std::cerr << "SquareBuffer uniform not found\n"; }
+    if (p_prevRender == -1) { std::cerr << "Previous render texture uniform not found\n"; }
+    if (p_skybox == -1) { std::cerr << "Skybox uniform not found\n"; }
+
+
 
 
    
@@ -48,6 +56,8 @@ void UNIFORMLOCS::Initialize(GLuint program)
     sphereBuffer = p_SphereBuffer;
     planeBuffer = p_PlaneBuffer;
     squareBuffer = p_SquareBuffer;
+    prevRender = p_prevRender;
+    skybox = p_skybox;
 
 }
 
@@ -61,16 +71,17 @@ void OpenGLContext::Initialize()
     }
 
     glViewport(0, 0, 800, 800);
-    
-    shader.Compile("vertex_shader.glsl","fragment_shader.glsl");
+
+    shader.Compile("vertex_shader.glsl", "fragment_shader.glsl");
     shader.Use();
     LOCS.Initialize(shader.GetProgram());
-    glUniform1i(glGetUniformLocation(shader.GetProgram(), "prevRender"), 0);
+    glUniform1i(LOCS.prevRender, 0);
+    glUniform1i(LOCS.skybox, 1);
     shader.EndUse();
-   
-    
 
-    
+
+
+
     glGenVertexArrays(1, &Viewport_VAO);
     glGenBuffers(1, &Viewport_VBO);
 
@@ -79,7 +90,7 @@ void OpenGLContext::Initialize()
     glBindBuffer(GL_ARRAY_BUFFER, Viewport_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_on_viewport), vertices_on_viewport, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -88,10 +99,10 @@ void OpenGLContext::Initialize()
 
     glGenFramebuffers(1, &Viewport_FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, Viewport_FBO);
-    
+
     glGenTextures(1, &Viewport_Texture);
     glBindTexture(GL_TEXTURE_2D, Viewport_Texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 100, 100, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // width and height get reset anyway
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 100, 100, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); // width and height get reset anyway
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Viewport_Texture, 0);
@@ -99,7 +110,7 @@ void OpenGLContext::Initialize()
 
     glGenRenderbuffers(1, &Viewport_RBO);
     glBindRenderbuffer(GL_RENDERBUFFER, Viewport_RBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 100, 100);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, 100, 100);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, Viewport_RBO);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -115,7 +126,7 @@ void OpenGLContext::Initialize()
 
 
     glGenBuffers(1, &PlaneUBO);
-    
+
     glBindBuffer(GL_UNIFORM_BUFFER, PlaneUBO);
     glUniformBlockBinding(shader.GetProgram(), LOCS.planeBuffer, LOCS.planeBuffer);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(Plane) * MAX_NUM_PLANES, nullptr, GL_STATIC_DRAW);
@@ -130,6 +141,9 @@ void OpenGLContext::Initialize()
     glBufferData(GL_UNIFORM_BUFFER, sizeof(Square) * MAX_NUM_SQUARES, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, LOCS.squareBuffer, SquareUBO);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    std::string path_to_skybox = ((std::string)ASSET_DIR) + "/skybox.hdr";
+    LoadHDR(&Skybox_Texture, path_to_skybox.c_str());
 }
 
 void OpenGLContext::EndContext()
@@ -137,8 +151,10 @@ void OpenGLContext::EndContext()
     glDeleteFramebuffers(1, &Viewport_FBO);
     glDeleteTextures(1, &Viewport_Texture);
     glDeleteRenderbuffers(1, &Viewport_RBO);
-    //glDeleteBuffers(1, &PlaneUBO);
-    //glDeleteBuffers(1, &SphereUBO);
+    glDeleteBuffers(1, &PlaneUBO);
+    glDeleteBuffers(1, &SphereUBO);
+    glDeleteTextures(1, &Skybox_Texture);
+    glFinish();
     shader.Delete();
 }
 
@@ -147,13 +163,13 @@ void OpenGLContext::Resize(unsigned int viewport_width, unsigned int viewport_he
     glBindFramebuffer(GL_FRAMEBUFFER, Viewport_FBO);
 
     glBindTexture(GL_TEXTURE_2D, Viewport_Texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, viewport_width, viewport_height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, viewport_width, viewport_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Viewport_Texture, 0);
 
     glBindRenderbuffer(GL_RENDERBUFFER, Viewport_RBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, viewport_width, viewport_height);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, viewport_width, viewport_height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, Viewport_RBO);
 
     glViewport(0, 0, viewport_width, viewport_height);
@@ -161,29 +177,26 @@ void OpenGLContext::Resize(unsigned int viewport_width, unsigned int viewport_he
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-
 }
 
 
 
 GLuint OpenGLContext::RenderToViewport()
 {
+ 
 
     glUniform1ui(LOCS.FrameCount, frame_count);
-    glActiveTexture(GL_TEXTURE0); // Choose the texture unit (e.g., GL_TEXTURE0, GL_TEXTURE1, etc.)
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, Skybox_Texture);
+
+    glActiveTexture(GL_TEXTURE0); 
     glBindTexture(GL_TEXTURE_2D, Viewport_Texture);
 
     glBindFramebuffer(GL_FRAMEBUFFER, Viewport_FBO);
-    //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    //glClear(GL_COLOR_BUFFER_BIT);
-
-    //glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(Viewport_VAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
-
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     frame_count += 1;

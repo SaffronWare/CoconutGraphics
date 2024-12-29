@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <glad/glad.h>
 
+#ifdef SHDR_DIR
+#endif 
 
 class Shader
 {

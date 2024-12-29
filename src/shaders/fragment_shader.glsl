@@ -25,7 +25,6 @@ struct Material
 struct Sphere {
     vec3 center;
     float radius;
-	//float padding[3];
 	Material material;
 };
 
@@ -51,16 +50,16 @@ struct Square
 	Material material;
 };
 
-
+const float PI = 3.14159265358979323846264338327950288419716939937510f;
 
 const float max_dist = 30000;
 const int num_spheres = 10;
 const int num_planes = 10;
 const int num_squares =5;
-const int num_biconvex_spheres = 3;
+
 
 const int num_bounces = 10;
-const float normal_offset = 0.01f;
+const float normal_offset = 0.001f;
 const int num_samples = 4;
 
 
@@ -74,7 +73,10 @@ uniform vec3 u_CameraUp;
 uniform uint u_FrameCount;
 uniform bool u_RenderMode;
 uniform float u_AliasingBlur;
+
 uniform sampler2D prevRender;
+uniform sampler2D skybox;
+
 
 layout(std140) uniform PlaneData 
 {
@@ -92,8 +94,6 @@ layout(std140) uniform SquareData {
 
 in vec3 fPos;
 out vec4 FragColor;
-
-//uniform sampler2D PrevRender;
 
 uint state = 0u;
 uint pcg_hash()
@@ -138,10 +138,6 @@ struct Ray
 	float IOR;
 
 };
-
-
-
-
 
 vec3 at(Ray ray, float t)
 {
@@ -211,6 +207,14 @@ HitData sphereInterection(Sphere sphere, Ray ray)
 	return hit;
 };
 
+vec2 SphereUV(vec3 dir)
+{
+	vec2 uv;
+	uv.x = 0.5f + 0.5f * atan(dir.z,dir.x) / PI;
+	uv.y = 0.5 + asin(dir.y) / PI;
+	return uv;
+};
+
 
 
 HitData planeIntersection(Plane plane, Ray ray)
@@ -244,7 +248,6 @@ HitData squareIntersection(Square square, Ray ray)
 
 	HitData temp = planeIntersection(plane, ray);
 	if (temp.hit == false) {return hit;}
-	//else {hit.hit = true; hit.dist = temp.dist; return hit;}
 	
 	vec3 p = (temp.point-square.center);
 	
@@ -265,44 +268,57 @@ HitData squareIntersection(Square square, Ray ray)
 	return hit;
 }
 
+bool HitisGood(HitData hit, HitData best)
+{
+	return (hit.hit && (hit.dist < best.dist) && (hit.dist > 2.0f * normal_offset));
+}
+
 
 HitData closestHit(Ray ray)
 {
 	HitData hit;
+	hit.hit = false;
 	HitData curr_hit;
 	hit.dist = max_dist;
 
 	for (int i  = 0; i < num_spheres; i++)
 	{
 		if (spheres[i].radius == 0) {break;}
-		curr_hit = sphereInterection(spheres[i], ray);
+		else{
+			curr_hit = sphereInterection(spheres[i], ray);
 
-		if (curr_hit.hit && (curr_hit.dist < hit.dist))
-		{
-				hit = curr_hit;
+			if (HitisGood(curr_hit,hit))
+			{
+					hit = curr_hit;
+			}
 		}
 	}
 
 	for (int i = 0; i < num_planes; i++)
 	{
 		if (planes[i].pad1  == 0.0) {break;}
-		curr_hit = planeIntersection(planes[i], ray);
+		else 
+			{
+			curr_hit = planeIntersection(planes[i], ray);
 
-		if (curr_hit.hit && (curr_hit.dist < hit.dist))
-		{
-				hit = curr_hit;
+			if (HitisGood(curr_hit,hit))
+			{
+					hit = curr_hit;
+			}
 		}
 	}
 
 	for (int i = 0; i < num_squares; i++)
 	{
 		if (squares[i].pad1 == 0.0) {break;}
-
-		curr_hit = squareIntersection(squares[i], ray);
-
-		if (curr_hit.hit && (curr_hit.dist < hit.dist))
+		else 
 		{
-				hit = curr_hit;
+			curr_hit = squareIntersection(squares[i], ray);
+
+			if (HitisGood(curr_hit, hit))
+			{
+					hit = curr_hit;
+			}
 		}
 	}
 
@@ -325,22 +341,16 @@ vec3 get_color(Ray ray)
 			
 			if (hit.hit)
 			{	
-				//seed += uint(num_bounces);
-			
 				vec3 specular = ray.dir - 2.0f * hit.normal * dot(ray.dir, hit.normal);
 
 				if (hit.mat.IOR < 1)
 				{
 					ray.pos = hit.point + hit.normal * normal_offset;
 					vec3 diffuse = randomOnHemisphere(hit.normal);
-					//vec3 diffuse = vec3(rand(),rand(), rand());
-					//return diffuse;
 
-				
 					bool isSpecular = (rand() < hit.mat.specular_probability);
-					float s = (1-hit.mat.roughness) * float(isSpecular); //woah...
+					float s = (1-hit.mat.roughness) * float(isSpecular);
 					
-					//s = 0.0f;
 
 					ray.dir = diffuse * (1-s) * (1-hit.mat.metallic) + specular * s;
 					ray.dir = normalize(ray.dir);
@@ -389,9 +399,8 @@ vec3 get_color(Ray ray)
 						float Rp = abs(Rpn / Rpd); Rp *= Rp;
 
 						float R = Rp + Rs; R *= 0.5;
-						//return refracted;
 
-						if (rand() > 1.0f * R) // i didnt like how weird reflections looked
+						if (rand() > 1.0f * R) 
 						{
 							ray.dir = refracted;
 						}
@@ -421,6 +430,9 @@ vec3 get_color(Ray ray)
 			}
 			else 
 			{
+				out_color += ray_color * vec3(texture(skybox, SphereUV(ray.dir)));
+				return out_color;
+				break;
 			}
 
 		}
@@ -428,9 +440,14 @@ vec3 get_color(Ray ray)
 	else 
 	{
 		HitData hit = closestHit(ray);
-
- 
-		out_color = hit.mat.color * max(0.2f, 0.5f * (1 + dot(hit.normal, cLightDir)));;
+		if (hit.hit)
+		{
+		out_color = hit.mat.color * max(0.2f, 0.5f * (1 + dot(hit.normal, cLightDir)));
+		}
+		else
+		{
+		out_color += vec3(texture(skybox, SphereUV(ray.dir)));
+		}
 	}
 
 	return out_color;
@@ -446,8 +463,8 @@ void main()
 {
 	int caseOfAntialiasing = int(mod(u_FrameCount, 4));
 	
-	vec2 uv = (vec2(fPos.x, fPos.y) + vec2(1,1)) / 2;
-
+	vec2 uv = (vec2(fPos.x, fPos.y) + vec2(1,1)) / 2;//(vec2(fPos.x, fPos.y) + vec2(1,1)) / 2;
+	
 	Ray ray;
 	ray.IOR = 1.0f;
 	vec3 out_color;
@@ -456,7 +473,7 @@ void main()
 	float y = fPos.y;
 
 
-	state = uint(gl_FragCoord.x * 1000.0f + gl_FragCoord.y * 1000000.0f + u_FrameCount*81932u);
+	state = uint(gl_FragCoord.x) * 1000u + uint(gl_FragCoord.y) * 1000000u + u_FrameCount*81392u;
 
 	uint amod = uint(mod(u_FrameCount, 2));
 
@@ -486,7 +503,7 @@ void main()
 		vec3 pixel_pos = u_CameraFront + x_*u_CameraRight + y_*u_CameraUp;
 		ray.IOR = 1.0f;
 		ray.pos = u_CameraPosition;
-		ray.dir = normalize(pixel_pos );
+		ray.dir = normalize(pixel_pos);
 
 		out_color += get_color(ray);
 	}
@@ -495,8 +512,9 @@ void main()
 
 	
 	if (!u_RenderMode)
-	{
-	FragColor = 1.0f * (gamma(vec4(out_color, 1)) + float(u_FrameCount) * texture(prevRender, uv)) / float(u_FrameCount + 1u);
+	{	
+		
+		FragColor = 1.0f * (gamma(vec4(out_color, 1)) + float(u_FrameCount) * texture(prevRender, uv)) / float(u_FrameCount + 1u);
 	}
 	else 
 	{

@@ -15,5 +15,4 @@ struct Scene
 	std::vector<Sphere> spheres = {};
 	std::vector<Plane> planes = {};
 	std::vector<Square> squares = {};
-	std::vector<BiconvexSphere> biconvexsheres = {};
 };

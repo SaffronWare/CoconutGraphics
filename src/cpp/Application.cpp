@@ -14,10 +14,10 @@ void Application::Setup()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RED_BITS, 24);
-    glfwWindowHint(GLFW_GREEN_BITS, 24);
-    glfwWindowHint(GLFW_BLUE_BITS, 24);
-    glfwWindowHint(GLFW_ALPHA_BITS, 8);
+    glfwWindowHint(GLFW_RED_BITS, 32);
+    glfwWindowHint(GLFW_GREEN_BITS, 32);
+    glfwWindowHint(GLFW_BLUE_BITS, 32);
+    glfwWindowHint(GLFW_ALPHA_BITS, 32);
 
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     if (!monitor) {
@@ -127,8 +127,9 @@ void Application::Run()
         {
 
             R_WAS_PRESSED = false;
+            if (camera.RenderMode) { C_WAS_PRESSED = true; }
             camera.RenderMode = !camera.RenderMode;
-            if (camera.RenderMode == false) { camera.isConnectedToCursor = false; }
+            //if (camera.RenderMode == false) { camera.isConnectedToCursor = false; }
             renderer.reset();
 
         }
