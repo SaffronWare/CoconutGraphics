@@ -448,7 +448,7 @@ void ImGuiRenderer::RenderViewport(OpenGLContext& context, unsigned int fps)
 
 		if (ImGui::Button("Save UI Layout"))
 		{
-			ImGui::SaveIniSettingsToDisk(((std::string)SRC_DIR + (const char*)"/imgui.ini").c_str());
+			ImGui::SaveIniSettingsToDisk("imgui.ini");
 		}
 
 		ImGui::BeginChild("Viewport");

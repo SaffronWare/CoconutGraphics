@@ -49,17 +49,7 @@ file(COPY ${SHDR_DIR} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${ASSET_DIR} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY "${SRC_DIR}/imgui.ini" DESTINATION ${CMAKE_BINARY_DIR})
 
-if (SHDR_DIR)
-	target_compile_definitions(CoconutGraphics PRIVATE SHDR_DIR=\"${SHDR_DIR}\")
-endif()
 
-if (SRC_DIR)
-	target_compile_definitions(CoconutGraphics PRIVATE SRC_DIR=\"${SRC_DIR}\")
-endif()
-
-if (ASSET_DIR)
-	target_compile_definitions(CoconutGraphics PRIVATE ASSET_DIR=\"${ASSET_DIR}\")
-endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET CoconutGraphics PROPERTY CXX_STANDARD 20)
