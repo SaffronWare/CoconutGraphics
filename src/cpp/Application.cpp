@@ -75,9 +75,6 @@ void Application::Run()
 
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) { renderer.reset(); }
 
-  
-            
-
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             camera.position += camera.getFront() * camera.speed * dt;
             renderer.reset();
