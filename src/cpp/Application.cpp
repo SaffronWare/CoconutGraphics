@@ -75,35 +75,34 @@ void Application::Run()
 
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) { renderer.reset(); }
 
-        if (camera.RenderMode)
-        {
+  
             
 
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-                camera.position += camera.getFront() * camera.speed * dt;
-                renderer.reset();
-            }
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-                camera.position -= camera.getFront() * camera.speed * dt;
-                renderer.reset();
-            }
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-                camera.position += camera.getRight() * camera.speed * dt;
-                renderer.reset();
-            }
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-                camera.position -= camera.getRight() * camera.speed * dt;
-                renderer.reset();
-            }
-            if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-                camera.position += Vec3(0, 1, 0) * camera.speed * dt;
-                renderer.reset();
-            }
-            if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-                camera.position -= Vec3(0, 1, 0) * camera.speed * dt;
-                renderer.reset();
-            }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            camera.position += camera.getFront() * camera.speed * dt;
+            renderer.reset();
         }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            camera.position -= camera.getFront() * camera.speed * dt;
+            renderer.reset();
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            camera.position += camera.getRight() * camera.speed * dt;
+            renderer.reset();
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            camera.position -= camera.getRight() * camera.speed * dt;
+            renderer.reset();
+        }
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+            camera.position += Vec3(0, 1, 0) * camera.speed * dt;
+            renderer.reset();
+        }
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+            camera.position -= Vec3(0, 1, 0) * camera.speed * dt;
+            renderer.reset();
+        }
+        
         if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && !C_WAS_PRESSED)
         {
             C_WAS_PRESSED = true;
@@ -127,15 +126,15 @@ void Application::Run()
         {
 
             R_WAS_PRESSED = false;
-            if (camera.RenderMode) { C_WAS_PRESSED = true; }
+            //if (camera.RenderMode) { C_WAS_PRESSED = true; }
             camera.RenderMode = !camera.RenderMode;
-            glfwGetCursorPos(window, &LastCursorX, &LastCursorY);
+            //glfwGetCursorPos(window, &LastCursorX, &LastCursorY);
             //if (camera.RenderMode == false) { camera.isConnectedToCursor = false; }
             renderer.reset();
 
         }
         
-        if (camera.isConnectedToCursor && camera.RenderMode)
+        if (camera.isConnectedToCursor) //&& camera.RenderMode)
         {
             glfwGetCursorPos(window, &CursorX, &CursorY);
             //std::cout << CursorX;

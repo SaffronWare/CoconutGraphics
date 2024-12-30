@@ -25,7 +25,8 @@ public:
 	float blur = 0.0f;
 
 	bool isConnectedToCursor = false;
-	bool RenderMode = true;
+	bool RenderMode = true; // kinda weird but true is for the preview renderer and false is for the actual renderer
+
 	
 
 	Camera() = default;
