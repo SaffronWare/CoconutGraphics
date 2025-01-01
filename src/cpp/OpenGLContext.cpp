@@ -15,6 +15,8 @@ void UNIFORMLOCS::Initialize(GLuint program)
     GLint p_FrameCount = glGetUniformLocation(program, "u_FrameCount");
     GLint p_RenderMode = glGetUniformLocation(program, "u_RenderMode");
     GLint p_AliasingBlur = glGetUniformLocation(program, "u_AliasingBlur");
+    GLint p_SkyboxIntensity = glGetUniformLocation(program, "u_SkyboxStrength");
+    GLint p_SkyboxContrast = glGetUniformLocation(program, "u_SkyboxContrast"); 
 
     GLint p_SphereBuffer = glGetUniformBlockIndex(program, "SphereData");
     GLint p_PlaneBuffer = glGetUniformBlockIndex(program, "PlaneData");
@@ -33,6 +35,8 @@ void UNIFORMLOCS::Initialize(GLuint program)
     if (p_AspectRatio == -1) { std::cerr << "AspectRatio uniform not found\n"; }
     if (p_RenderMode == -1) { std::cerr << "RenderMode uniform not found\n"; }
     if (p_AliasingBlur == -1) { std::cerr << "Aliasing Blur uniform not found\n"; }
+    if (p_SkyboxIntensity == -1) { std::cerr << "Skybox Intensity uniform not found\n"; }
+    if (p_SkyboxContrast == -1) { std::cerr << "Skybox Contrast uniform not found\n"; }
     if (p_SphereBuffer == -1) { std::cerr << "SphereBuffer uniform not found\n"; }
     if (p_PlaneBuffer == -1) { std::cerr << "PlaneBuffer uniform not found\n"; }
     if (p_FrameCount == -1) { std::cerr << "FrameCount uniform not found\n"; }
@@ -52,6 +56,8 @@ void UNIFORMLOCS::Initialize(GLuint program)
     FrameCount = p_FrameCount;
     RenderMode = p_RenderMode;
     Aliasing_Blur = p_AliasingBlur;
+    SkyboxIntensity = p_SkyboxIntensity;
+    SkyboxContrast = p_SkyboxContrast;
 
     sphereBuffer = p_SphereBuffer;
     planeBuffer = p_PlaneBuffer;
@@ -213,6 +219,8 @@ void OpenGLContext::PassCamera(const Camera& camera)
     glUniform1i(LOCS.RenderMode, camera.RenderMode);
     glUniform1f(LOCS.AspectRatio, camera.getAspectRatio());
     glUniform1f(LOCS.Aliasing_Blur, camera.blur * 0.01f);
+    glUniform1f(LOCS.SkyboxIntensity, camera.SkyboxIntensity);
+    glUniform1f(LOCS.SkyboxContrast, camera.SkyboxContrast);
     glUniform3f(LOCS.CameraUp, camera.getUp().x, camera.getUp().y, camera.getUp().z);
     glUniform3f(LOCS.CameraRight, camera.getRight().x, camera.getRight().y, camera.getRight().z);
     glUniform3f(LOCS.CameraFront, camera.getViewportFront().x, camera.getViewportFront().y, camera.getViewportFront().z);

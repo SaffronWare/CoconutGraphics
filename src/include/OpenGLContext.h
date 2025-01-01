@@ -26,6 +26,8 @@ struct UNIFORMLOCS
 	GLuint RenderMode;
 	GLuint Aliasing_Blur;
 	GLuint FrameCount;
+	GLuint SkyboxIntensity;
+	GLuint SkyboxContrast;
 
 	GLuint sphereBuffer;
 	GLuint planeBuffer;

@@ -23,6 +23,8 @@ public:
 	float FOV = 1.0f;
 
 	float blur = 0.0f;
+	float SkyboxIntensity = 1.0f;
+	float SkyboxContrast = 1.0f;
 
 	bool isConnectedToCursor = false;
 	bool RenderMode = true; // kinda weird but true is for the preview renderer and false is for the actual renderer

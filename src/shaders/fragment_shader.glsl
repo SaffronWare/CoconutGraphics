@@ -74,6 +74,8 @@ uniform vec3 u_CameraUp;
 uniform uint u_FrameCount;
 uniform bool u_RenderMode;
 uniform float u_AliasingBlur;
+uniform float u_SkyboxStrength;
+uniform float u_SkyboxContrast;
 
 uniform sampler2D prevRender;
 uniform sampler2D skybox;
@@ -431,7 +433,7 @@ vec3 get_color(Ray ray)
 			}
 			else 
 			{
-				out_color += ray_color * vec3(texture(skybox, SphereUV(ray.dir)));
+				out_color += ray_color * pow(vec3(texture(skybox, SphereUV(ray.dir))) * u_SkyboxStrength, vec3(u_SkyboxContrast));
 				return out_color;
 				break;
 			}
@@ -447,7 +449,7 @@ vec3 get_color(Ray ray)
 		}
 		else
 		{
-		out_color += vec3(texture(skybox, SphereUV(ray.dir)));
+		out_color += ray_color * pow(vec3(texture(skybox, SphereUV(ray.dir))) * u_SkyboxStrength, vec3(u_SkyboxContrast));
 		}
 	}
 

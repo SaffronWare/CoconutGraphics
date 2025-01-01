@@ -271,6 +271,8 @@ void ImGuiRenderer::RenderCamMenu()
 	ImGui::SliderFloat("Speed", &camera->speed, 1.0f, 25.0f);
 	ImGui::SliderFloat("FOV (rads)", &(camera->FOV), 0.5f, 3.0f);
 
+	ImGui::SliderFloat("Skybox Intensity", &(camera->SkyboxIntensity), 0.0f, 2.0f);
+	ImGui::SliderFloat("Skybox Contrast", &(camera->SkyboxContrast), 0.2f, 1.5f);
 	ImGui::SliderFloat("BLUR (small value for antialiasing", &camera->blur, 0.0f, 1.0f, "%.5f");
 
 	ImGui::End();
