@@ -52,7 +52,7 @@ void Application::Setup()
 
     renderer.Initialize(window, &scene, &camera);
 
-    scene.random_sphere_scene(50, 0.3f, 2.5f, 40.0f);
+    scene.random_sphere_scene(20, 0.2f, 1.5f, 20.0f);
     
 
     
