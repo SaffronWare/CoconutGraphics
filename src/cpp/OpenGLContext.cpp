@@ -240,22 +240,23 @@ void OpenGLContext::EndUseProgram()
 void OpenGLContext::OnSphereBufferChange(const Scene& scene)
 {
     glBindBuffer(GL_UNIFORM_BUFFER, SphereUBO);
-    glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_SPHERES * sizeof(Sphere), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_SPHERES * sizeof(Sphere), scene.empty_spheres, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0,  scene.spheres.size() * sizeof(Sphere), scene.spheres.data());
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 }
 
 void OpenGLContext::OnPlaneBufferChange(const Scene& scene)
 {
     glBindBuffer(GL_UNIFORM_BUFFER, PlaneUBO);
-    glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_PLANES * sizeof(Plane), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_PLANES * sizeof(Plane), scene.empty_planes, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, scene.planes.size() * sizeof(Plane), scene.planes.data());
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 void OpenGLContext::OnSquareBufferChange(const Scene& scene)
 {   
     glBindBuffer(GL_UNIFORM_BUFFER, SquareUBO);
-    glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_SQUARES * sizeof(Square), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_NUM_SQUARES * sizeof(Square), scene.empty_squares, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, scene.squares.size() * sizeof(Square), scene.squares.data());
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

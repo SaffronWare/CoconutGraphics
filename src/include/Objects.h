@@ -47,7 +47,7 @@ struct Sphere
 {
 
 	Vec3 position;
-	float radius;
+	float radius = 0.0f;
 	Material material;
 
 };

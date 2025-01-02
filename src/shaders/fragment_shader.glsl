@@ -299,7 +299,7 @@ HitData closestHit(Ray ray)
 
 	for (int i = 0; i < num_planes; i++)
 	{
-		if (planes[i].pad1  == 0.0) {break;}
+		if (planes[i].normal  == vec3(0.0f,0.0f,0.0f)) {break;}
 		else 
 			{
 			curr_hit = planeIntersection(planes[i], ray);
@@ -313,7 +313,7 @@ HitData closestHit(Ray ray)
 
 	for (int i = 0; i < num_squares; i++)
 	{
-		if (squares[i].pad1 == 0.0) {break;}
+		if (squares[i].u == vec3(0.0f,0.0f,0.0f)) {break;}
 		else 
 		{
 			curr_hit = squareIntersection(squares[i], ray);
