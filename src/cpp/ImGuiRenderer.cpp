@@ -22,6 +22,9 @@ void ImGuiRenderer::Initialize(GLFWwindow* window, Scene* scene, Camera* camera)
 
 	this->camera = camera;
 	this->scene = scene;
+
+
+	
 }
 
 void ImGuiRenderer::RenderLocMatMenu(Material& mat)
@@ -434,6 +437,10 @@ void ImGuiRenderer::RenderViewport(OpenGLContext& context, unsigned int fps)
 	if (EDITED_PLANES) { context.OnPlaneBufferChange(*scene); }
 	if (EDITED_SQUARES) { context.OnSquareBufferChange(*scene); }
 
+	EDITED_SPHERES = false;
+	EDITED_PLANES = false;
+	EDITED_SQUARES = false;
+
 
 	ImGui::Begin("Scene");
 	{
@@ -520,9 +527,7 @@ void ImGuiRenderer::BeforeRender()
 void ImGuiRenderer::AfterRender()
 {
 
-	EDITED_SPHERES = false; 
-	EDITED_PLANES = false;
-	EDITED_SQUARES = false;
+	
 	
 
 	ImGui::Render();

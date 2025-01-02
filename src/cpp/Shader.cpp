@@ -29,8 +29,6 @@ void Shader::Compile(const char* vert_source, const char* frag_source)
 	const char* vertex_shader_source = vertex_shader_text.c_str();
 	const char* fragment_shader_source = fragment_shader_text.c_str();
 
-	std::cout << vertex_shader_source << "\n";
-	std::cout << fragment_shader_source << "\n";
 	
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &vertex_shader_source, GL_NONE);

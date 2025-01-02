@@ -12,18 +12,7 @@ void LoadHDR(GLuint* textureID, const char* path)
 		return;
 	}
 
-    std::cout << "Num channels: " << channels << "\n";
-    std::cout << "Skybox data: " << data << "\n";
 
-    // Print first pixel in the loaded HDR data (if the image is not null)
-    if (data) {
-        int pixelIndex = 0;  // The index of the first pixel (for example)
-        float r = data[pixelIndex];       // Red channel
-        float g = data[pixelIndex + 1];   // Green channel
-        float b = data[pixelIndex + 2];   // Blue channel
-
-        std::cout << "First pixel (R, G, B): " << r << ", " << g << ", " << b << std::endl;
-    }
 
 	glGenTextures(1, textureID);
 	glBindTexture(GL_TEXTURE_2D, *textureID);

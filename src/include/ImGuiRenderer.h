@@ -32,9 +32,9 @@ private:
 	float square_v[3] = { 0.0f, 0.0f, 0.0f };
 
 
-	bool EDITED_SPHERES = false;
-	bool EDITED_PLANES = false;
-	bool EDITED_SQUARES = false;
+	bool EDITED_SPHERES = true;
+	bool EDITED_PLANES = true;
+	bool EDITED_SQUARES = true;
 
 
 public:

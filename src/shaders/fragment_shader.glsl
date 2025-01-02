@@ -54,7 +54,7 @@ struct Square
 const float PI = 3.14159265358979323846264338327950288419716939937510f;
 
 const float max_dist = 3000;
-const int num_spheres = 10;
+const int num_spheres = 50;
 const int num_planes = 10;
 const int num_squares =5;
 
