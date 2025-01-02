@@ -23,7 +23,7 @@ public:
 	float FOV = 1.0f;
 
 	float blur = 0.0f;
-	float SkyboxIntensity = 0.1f;
+	float SkyboxIntensity = 0.36f;
 	float SkyboxContrast = 0.7f;
 
 	bool isConnectedToCursor = false;
