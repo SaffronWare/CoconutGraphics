@@ -1,4 +1,4 @@
-![alt text](image.png) ![alt text](render.png)
+<img src="image.png" alt="Description 1" width="48%"/> <img src="render.png" alt="Description 2" width="48%"/>
 
 # CoconutGraphics
 CoconutGraphics is my first OpenGL project: a C++/OpenGL path tracer built to explore physically based rendering, optics, and light transport from first principles.
