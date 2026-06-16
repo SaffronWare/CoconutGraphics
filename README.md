@@ -1,4 +1,5 @@
 ![alt text](image.png)
+![alt text](render.png)
 
 # CoconutGraphics
 CoconutGraphics is my first OpenGL project: a C++/OpenGL path tracer built to explore physically based rendering, optics, and light transport from first principles.
